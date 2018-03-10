@@ -2,10 +2,12 @@
   Created by IntelliJ IDEA.
   User: shun-minchang
   Date: 2018/3/11
-  Time: 上午3:00
+  Time: 上午3:25
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://www.springframework.org/tags" %>
 <html>
     <head>
         <meta charset="utf-8">
@@ -27,13 +29,19 @@
         <title>Title</title>
     </head>
     <body class="container">
-        <h3>功能選單</h3>
+        <h3>站點詳情</h3>
         <hr>
-        <div class="list-group">
-            <a href="/site/addSite" class="list-group-item list-group-item-action">新增站點</a>
-            <a href="/site/siteList" class="list-group-item list-group-item-action">站點列表</a>
-            <a href="/nurse/addNurse" class="list-group-item list-group-item-action">新增護士</a>
-            <a href="/nurse/nurseList" class="list-group-item list-group-item-action">護士列表</a>
-        </div>
+        <form:form action="/site/updateSiteP" method="post" modelAttribute="site" role="form">
+            <div class="form-group">
+                <a href="../.." role="button" class="btn btn-sm btn-light col-sm-1">返回</a>
+                <button type="submit" class="btn btn-sm btn-success  col-sm-1">儲存</button>
+            </div>
+            <div class="form-group">
+                <label for="name">站點名稱:</label>
+                <input type="text" class="form-control col-sm-2" id="name" name="name" placeholder="請輸入站點名稱"
+                       value="${site.name}"/>
+            </div>
+            <input type="hidden" id="id" name="id" value="${site.id}"/>
+        </form:form>
     </body>
 </html>

@@ -1,0 +1,65 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: shun-minchang
+  Date: 2018/3/11
+  Time: 上午3:25
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script
+                src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+              crossorigin="anonymous">
+        <title>Title</title>
+    </head>
+    <body class="container">
+        <h3>站點列表</h3>
+        <hr>
+        <div class="form-group">
+            <a href=".." role="button" class="btn btn-sm btn-light col-sm-1">返回</a>
+        </div>
+        <c:if test="${empty siteList}">
+            <div class="alert alert-warning" role="alert">
+                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>Site表是空的，請<a
+                    href="/site/addSite" role="button" class="btn btn-primary btn-sm">新增</a>
+            </div>
+        </c:if>
+        <c:if test="${!empty siteList}">
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>站點名稱</th>
+                    <th>更新日期</th>
+                    <th>建立日期</th>
+                    <th></th>
+                </tr>
+
+                <c:forEach items="${siteList}" var="site">
+                    <tr>
+                        <td>${site.name}</td>
+                        <td>${site.updateTime}</td>
+                        <td>${site.createTime}</td>
+                        <td>
+                            <a href="/site/show/${site.id}" role="button" class="btn btn-sm btn-success">檢視</a>
+                            <a href="/site/delete/${site.id}" role="button" class="btn btn-sm btn-danger">刪除</a>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </c:if>
+    </body>
+</html>
