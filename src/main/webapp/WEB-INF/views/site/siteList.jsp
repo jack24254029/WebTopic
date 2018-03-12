@@ -48,14 +48,14 @@
                     <th></th>
                 </tr>
 
-                <c:forEach items="${siteList}" var="site">
+                <c:forEach items="${siteList}" var="task">
                     <tr>
-                        <td>${site.name}</td>
-                        <td>${site.updateTime}</td>
-                        <td>${site.createTime}</td>
+                        <td>${task.name}</td>
+                        <td>${task.updateTime}</td>
+                        <td>${task.createTime}</td>
                         <td>
-                            <a href="/site/show/${site.id}" role="button" class="btn btn-sm btn-success">檢視</a>
-                            <a href="/site/delete/${site.id}" role="button" class="btn btn-sm btn-danger">刪除</a>
+                            <a href="/site/show/${task.id}" role="button" class="btn btn-sm btn-success">檢視</a>
+                            <a href="/site/delete/${task.id}" role="button" class="btn btn-sm btn-danger">刪除</a>
                         </td>
                     </tr>
                 </c:forEach>

@@ -49,15 +49,15 @@
                     <th></th>
                 </tr>
 
-                <c:forEach items="${nurseList}" var="site">
+                <c:forEach items="${nurseList}" var="task">
                     <tr>
-                        <td>${site.uid}</td>
-                        <td>${site.name}</td>
-                        <td>${site.updateTime}</td>
-                        <td>${site.createTime}</td>
+                        <td>${task.id}</td>
+                        <td>${task.name}</td>
+                        <td>${task.updateTime}</td>
+                        <td>${task.createTime}</td>
                         <td>
-                            <a href="/nurse/show/${site.id}" role="button" class="btn btn-sm btn-success">檢視</a>
-                            <a href="/nurse/delete/${site.id}" role="button" class="btn btn-sm btn-danger">刪除</a>
+                            <a href="/nurse/show/${task.id}" role="button" class="btn btn-sm btn-success">檢視</a>
+                            <a href="/nurse/delete/${task.id}" role="button" class="btn btn-sm btn-danger">刪除</a>
                         </td>
                     </tr>
                 </c:forEach>

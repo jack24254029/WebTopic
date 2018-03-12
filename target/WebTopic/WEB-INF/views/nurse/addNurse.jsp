@@ -25,19 +25,25 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
               integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
               crossorigin="anonymous">
+        <script type="application/javascript">
+            var submitForms = function () {
+                document.getElementById("nurseForm").submit();
+                document.getElementById("taskForm").submit();
+            }
+        </script>
         <title>Title</title>
     </head>
     <body class="container">
         <h3>新增護士</h3>
         <hr>
-        <form:form action="/nurse/addNurseP" method="post" modelAttribute="nurse" role="form">
+        <form:form id="nurseForm" action="/nurse/addNurseP" method="post" modelAttribute="nurse" role="form">
             <div class="form-group">
                 <a href=".." role="button" class="btn btn-sm btn-light col-sm-1">返回</a>
-                <button type="submit" class="btn btn-sm btn-success col-sm-1">新增</button>
+                <button type="button" class="btn btn-sm btn-success col-sm-1" onclick="submitForms()">新增</button>
             </div>
             <div class="form-group">
-                <label for="uid">員工編號:</label>
-                <input type="text" class="form-control col-sm-2" id="uid" name="uid" placeholder="請輸入員工編號" required/>
+                <label for="id">員工編號:</label>
+                <input type="text" class="form-control col-sm-2" id="id" name="id" placeholder="請輸入員工編號" required/>
             </div>
             <div class="form-group">
                 <label for="name">姓名:</label>

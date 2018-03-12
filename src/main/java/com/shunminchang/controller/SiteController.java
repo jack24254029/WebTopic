@@ -1,8 +1,11 @@
 package com.shunminchang.controller;
 
+import com.shunminchang.model.NurseEntity;
 import com.shunminchang.model.SiteEntity;
-import com.shunminchang.model.SiteEntity;
+import com.shunminchang.model.TaskEntity;
+import com.shunminchang.repository.NurseRepository;
 import com.shunminchang.repository.SiteRepository;
+import com.shunminchang.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -12,12 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class SiteController {
     @Autowired
     SiteRepository siteRepository;
+    @Autowired
+    TaskRepository taskRepository;
+    @Autowired
+    NurseRepository nurseRepository;
 
     @RequestMapping(value = "/site/siteList", method = RequestMethod.GET)
     public String getSite(ModelMap modelMap) {
@@ -44,6 +52,14 @@ public class SiteController {
     public String showSite(@PathVariable("id") Integer id, ModelMap modelMap) {
         SiteEntity siteEntity = siteRepository.findById(id).get();
         modelMap.addAttribute("site", siteEntity);
+        List<TaskEntity> taskEntities = taskRepository.findAllBySiteId(id);
+        modelMap.addAttribute("taskList", taskEntities);
+        List<NurseEntity> nurseEntities = new ArrayList<>();
+        for (TaskEntity taskEntity : taskEntities) {
+            NurseEntity nurseEntity = nurseRepository.findById(taskEntity.getNurseId()).get();
+            nurseEntities.add(nurseEntity);
+        }
+        modelMap.addAttribute("nurseList", nurseEntities);
         return "site/siteDetail";
     }
 

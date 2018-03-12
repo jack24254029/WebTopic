@@ -2,7 +2,6 @@ package com.shunminchang.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -12,7 +11,6 @@ public class SiteEntity {
     private String name;
     private Timestamp createTime;
     private Timestamp updateTime;
-    private Collection<TaskEntity> siteByTaskId;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -69,14 +67,5 @@ public class SiteEntity {
     public int hashCode() {
 
         return Objects.hash(id, name, createTime, updateTime);
-    }
-
-    @OneToMany(mappedBy = "taskBySiteId")
-    public Collection<TaskEntity> getSiteByTaskId() {
-        return siteByTaskId;
-    }
-
-    public void setSiteByTaskId(Collection<TaskEntity> siteByTaskId) {
-        this.siteByTaskId = siteByTaskId;
     }
 }

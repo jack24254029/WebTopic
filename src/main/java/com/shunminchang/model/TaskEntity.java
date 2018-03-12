@@ -6,20 +6,34 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Task", schema = "WebTopic", catalog = "")
+@IdClass(TaskEntityPK.class)
 public class TaskEntity {
-    private int id;
+    private int siteId;
+    private String nurseId;
     private Timestamp createTime;
-    private NurseEntity taskByNurseId;
-    private SiteEntity taskBySiteId;
 
     @Id
-    @Column(name = "id", nullable = false)
-    public int getId() {
-        return id;
+    @Column(name = "site_id", nullable = false)
+    @ManyToMany
+    @JoinColumn(name = "SITE_ID", table = "Site")
+    public int getSiteId() {
+        return siteId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setSiteId(int siteId) {
+        this.siteId = siteId;
+    }
+
+    @Id
+    @Column(name = "nurse_id", nullable = false, length = 10)
+    @ManyToMany
+    @JoinColumn(name = "NURSE_ID", table = "Nurse")
+    public String getNurseId() {
+        return nurseId;
+    }
+
+    public void setNurseId(String nurseId) {
+        this.nurseId = nurseId;
     }
 
     @Basic
@@ -37,33 +51,14 @@ public class TaskEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TaskEntity that = (TaskEntity) o;
-        return id == that.id &&
+        return siteId == that.siteId &&
+                Objects.equals(nurseId, that.nurseId) &&
                 Objects.equals(createTime, that.createTime);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, createTime);
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "nurse_id", referencedColumnName = "id", nullable = false)
-    public NurseEntity getTaskByNurseId() {
-        return taskByNurseId;
-    }
-
-    public void setTaskByNurseId(NurseEntity taskByNurseId) {
-        this.taskByNurseId = taskByNurseId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "site_id", referencedColumnName = "id", nullable = false)
-    public SiteEntity getTaskBySiteId() {
-        return taskBySiteId;
-    }
-
-    public void setTaskBySiteId(SiteEntity taskBySiteId) {
-        this.taskBySiteId = taskBySiteId;
+        return Objects.hash(siteId, nurseId, createTime);
     }
 }

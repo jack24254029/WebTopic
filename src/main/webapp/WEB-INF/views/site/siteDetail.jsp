@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="c" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
     <head>
         <meta charset="utf-8">
@@ -43,5 +43,22 @@
             </div>
             <input type="hidden" id="id" name="id" value="${site.id}"/>
         </form:form>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>員工編號</th>
+                <th>護士姓名</th>
+                <th>加入日期</th>
+            </tr>
+            <c:if test="${!empty taskList}">
+                <c:forEach items="${nurseList}" var="nurse" varStatus="status">
+                    <tr>
+                        <td>${nurse.id}</td>
+                        <td>${nurse.name}</td>
+                        <td>${taskList[status.index].createTime}</td>
+                    </tr>
+                </c:forEach>
+            </c:if>
+        </table>
+
     </body>
 </html>

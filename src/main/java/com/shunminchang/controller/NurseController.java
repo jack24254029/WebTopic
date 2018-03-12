@@ -1,8 +1,12 @@
 package com.shunminchang.controller;
 
 import com.shunminchang.model.NurseEntity;
+import com.shunminchang.model.SiteEntity;
+import com.shunminchang.model.TaskEntity;
 import com.shunminchang.repository.NurseRepository;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+import com.shunminchang.repository.SiteRepository;
+import com.shunminchang.repository.TaskRepository;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -12,13 +16,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class NurseController {
     @Autowired
     NurseRepository nurseRepository;
+    @Autowired
+    TaskRepository taskRepository;
+    @Autowired
+    SiteRepository siteRepository;
 
     @RequestMapping(value = "/nurse/nurseList", method = RequestMethod.GET)
     public String getNurse(ModelMap modelMap) {
@@ -42,22 +50,36 @@ public class NurseController {
     }
 
     @RequestMapping(value = "/nurse/show/{id}", method = RequestMethod.GET)
-    public String showNurse(@PathVariable("id") Integer id, ModelMap modelMap) {
+    public String showNurse(@PathVariable("id") String id, ModelMap modelMap) {
         NurseEntity nurseEntity = nurseRepository.findById(id).get();
         modelMap.addAttribute("nurse", nurseEntity);
+        List<TaskEntity> unSelectedTaskEntities = taskRepository.findAllByNurseIdNotQuery(id);
+        List<SiteEntity> unSelectedSiteEntities = new ArrayList<>();
+        for (TaskEntity taskEntity : unSelectedTaskEntities) {
+            SiteEntity siteEntity = siteRepository.findById(taskEntity.getSiteId()).get();
+            unSelectedSiteEntities.add(siteEntity);
+        }
+        modelMap.addAttribute("unSelectedSiteList", unSelectedSiteEntities);
+
+        List<TaskEntity> selectedTaskEntities = taskRepository.findAllByNurseId(id);
+        List<SiteEntity> selectedSiteEntities = new ArrayList<>();
+        for (TaskEntity taskEntity : selectedTaskEntities) {
+            SiteEntity siteEntity = siteRepository.findById(taskEntity.getSiteId()).get();
+            selectedSiteEntities.add(siteEntity);
+        }
+        modelMap.addAttribute("selectedSiteList", selectedSiteEntities);
         return "nurse/nurseDetail";
     }
 
     @RequestMapping(value = "/nurse/updateNurseP", method = RequestMethod.POST)
-    public String updateUserPost(@ModelAttribute("nurse") NurseEntity nurseEntity) {
-        nurseRepository.updateUser(nurseEntity.getUid(), nurseEntity.getName(),
-                new Timestamp(System.currentTimeMillis()), nurseEntity.getId());
+    public String updateUserPost(@ModelAttribute("nurse") NurseEntity nurseEntity, @ModelAttribute("selectedSiteList") SiteEntity siteEntity) {
+        nurseRepository.updateUser(nurseEntity.getName(), new Timestamp(System.currentTimeMillis()), nurseEntity.getId());
         nurseRepository.flush();
         return "redirect:/nurse/nurseList";
     }
 
     @RequestMapping(value = "/nurse/delete/{id}", method = RequestMethod.GET)
-    public String deleteNurse(@PathVariable("id") Integer id) {
+    public String deleteNurse(@PathVariable("id") String id) {
         NurseEntity nurseEntity = nurseRepository.getOne(id);
         nurseRepository.delete(nurseEntity);
         return "redirect:/nurse/nurseList";

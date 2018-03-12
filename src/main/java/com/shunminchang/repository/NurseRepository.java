@@ -12,11 +12,10 @@ import java.sql.Timestamp;
 import java.util.Optional;
 
 @Repository
-public interface NurseRepository extends JpaRepository<NurseEntity, Integer> {
+public interface NurseRepository extends JpaRepository<NurseEntity, String> {
 
     @Modifying
     @Transactional
-    @Query("update NurseEntity nurse set nurse.uid=:qUid, nurse.name=:qName, nurse.updateTime=:qUpdateTime where nurse.id=:qId")
-    public void updateUser(@Param("qUid") String uid, @Param("qName") String name,
-                           @Param("qUpdateTime") Timestamp updateTime, @Param("qId") Integer id);
+    @Query("UPDATE NurseEntity nurse SET nurse.name=:qName, nurse.updateTime=:qUpdateTime WHERE nurse.id=:qId")
+    public void updateUser(@Param("qName") String name, @Param("qUpdateTime") Timestamp updateTime, @Param("qId") String id);
 }

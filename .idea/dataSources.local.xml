@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal">
-    <data-source name="MySQL - WebTopic@localhost" uuid="6ccb2927-9792-481d-a9eb-1ce5b9cec34c">
+    <data-source name="WebTopic@localhost" uuid="fc4e36d9-1886-4c59-a9d2-8f44062a7195">
       <database-info product="MySQL" version="5.7.21" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.45 ( Revision: 9131eefa398531c7dc98776e8a3fe839e544c5b2 )">
         <extra-name-characters>#@</extra-name-characters>
         <identifier-quote-string>`</identifier-quote-string>
