@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.Optional;
 
 @Repository
 public interface NurseRepository extends JpaRepository<NurseEntity, String> {
@@ -17,5 +16,5 @@ public interface NurseRepository extends JpaRepository<NurseEntity, String> {
     @Modifying
     @Transactional
     @Query("UPDATE NurseEntity nurse SET nurse.name=:qName, nurse.updateTime=:qUpdateTime WHERE nurse.id=:qId")
-    public void updateUser(@Param("qName") String name, @Param("qUpdateTime") Timestamp updateTime, @Param("qId") String id);
+    void updateUser(@Param("qName") String name, @Param("qUpdateTime") Timestamp updateTime, @Param("qId") String id);
 }

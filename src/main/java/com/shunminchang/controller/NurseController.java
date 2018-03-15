@@ -6,18 +6,19 @@ import com.shunminchang.model.TaskEntity;
 import com.shunminchang.repository.NurseRepository;
 import com.shunminchang.repository.SiteRepository;
 import com.shunminchang.repository.TaskRepository;
-import net.bytebuddy.asm.Advice;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 public class NurseController {
@@ -51,31 +52,74 @@ public class NurseController {
 
     @RequestMapping(value = "/nurse/show/{id}", method = RequestMethod.GET)
     public String showNurse(@PathVariable("id") String id, ModelMap modelMap) {
+        // 取得該護士的資料
         NurseEntity nurseEntity = nurseRepository.findById(id).get();
         modelMap.addAttribute("nurse", nurseEntity);
-        List<TaskEntity> unSelectedTaskEntities = taskRepository.findAllByNurseIdNotQuery(id);
-        List<SiteEntity> unSelectedSiteEntities = new ArrayList<>();
-        for (TaskEntity taskEntity : unSelectedTaskEntities) {
-            SiteEntity siteEntity = siteRepository.findById(taskEntity.getSiteId()).get();
-            unSelectedSiteEntities.add(siteEntity);
-        }
-        modelMap.addAttribute("unSelectedSiteList", unSelectedSiteEntities);
-
-        List<TaskEntity> selectedTaskEntities = taskRepository.findAllByNurseId(id);
         List<SiteEntity> selectedSiteEntities = new ArrayList<>();
-        for (TaskEntity taskEntity : selectedTaskEntities) {
-            SiteEntity siteEntity = siteRepository.findById(taskEntity.getSiteId()).get();
-            selectedSiteEntities.add(siteEntity);
+        List<SiteEntity> unselectedSiteEntities = siteRepository.findAll();
+        // 先查詢有沒有已分配的站點
+        List<TaskEntity> taskEntities = taskRepository.findAllByNurseId(id);
+        // 如果有資料，繼續查詢站點名稱
+        if (taskEntities.size() > 0) {
+            for (TaskEntity taskEntity : taskEntities) {
+                try {
+                    SiteEntity siteEntity = siteRepository.findById(taskEntity.getSiteId()).get();
+                    selectedSiteEntities.add(siteEntity);
+                } catch (NoSuchElementException ex) {
+                    // do nothing;
+                }
+            }
+            // 比對沒被分配到的站點是哪些
+            for (int i = 0; i < selectedSiteEntities.size(); i++) {
+                if (unselectedSiteEntities.contains(selectedSiteEntities.get(i))) {
+                    unselectedSiteEntities.remove(selectedSiteEntities.get(i));
+                }
+            }
         }
         modelMap.addAttribute("selectedSiteList", selectedSiteEntities);
+        modelMap.addAttribute("unSelectedSiteList", unselectedSiteEntities);
         return "nurse/nurseDetail";
     }
 
     @RequestMapping(value = "/nurse/updateNurseP", method = RequestMethod.POST)
-    public String updateUserPost(@ModelAttribute("nurse") NurseEntity nurseEntity, @ModelAttribute("selectedSiteList") SiteEntity siteEntity) {
+    public String updateUserPost(@ModelAttribute("nurse") NurseEntity nurseEntity) {
         nurseRepository.updateUser(nurseEntity.getName(), new Timestamp(System.currentTimeMillis()), nurseEntity.getId());
         nurseRepository.flush();
         return "redirect:/nurse/nurseList";
+    }
+
+    @PostMapping(value = "/nurse/updateSiteOfNurse")
+    public @ResponseBody
+    ResponseEntity<String> updateSiteOfNurse(@RequestBody String json) {
+        Timestamp createTime = new Timestamp(System.currentTimeMillis());
+        JSONObject jsonObject = new JSONObject(json);
+        String nurseId = jsonObject.getString("nurseId");
+        JSONArray unSelectedArray = jsonObject.getJSONArray("unSelectedSiteIds");
+        JSONArray selectedArray = jsonObject.getJSONArray("selectedSiteIds");
+        for (int i = 0; i < unSelectedArray.length(); i++) {
+            int siteId = unSelectedArray.getInt(i);
+            TaskEntity taskEntity = checkTaskEntity(nurseId, siteId);
+            if (taskEntity != null) {
+                taskRepository.delete(taskEntity);
+            }
+        }
+        for (int i = 0; i < selectedArray.length(); i++) {
+            int siteId = selectedArray.getInt(i);
+            TaskEntity taskEntity = checkTaskEntity(nurseId, siteId);
+            if (taskEntity == null) {
+                taskEntity = new TaskEntity();
+                taskEntity.setSiteId(siteId);
+                taskEntity.setNurseId(nurseId);
+                taskEntity.setCreateTime(createTime);
+                taskRepository.saveAndFlush(taskEntity);
+            }
+        }
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
+    private TaskEntity checkTaskEntity(String nurseId, int siteId) {
+        TaskEntity taskEntity = taskRepository.findAllByNurseIdAndSiteId(nurseId, siteId);
+        return taskEntity;
     }
 
     @RequestMapping(value = "/nurse/delete/{id}", method = RequestMethod.GET)

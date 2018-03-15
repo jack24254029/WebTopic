@@ -11,5 +11,14 @@
       <user-name>root</user-name>
       <introspection-schemas>*:WebTopic</introspection-schemas>
     </data-source>
+    <data-source name="defaultPersistenceUnit/Hibernate" uuid="7ddebe0c-1a36-4676-8184-5852ffe52af4">
+      <database-info product="MySQL" version="5.7.21" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.45 ( Revision: 9131eefa398531c7dc98776e8a3fe839e544c5b2 )">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="upper" />
+      <user-name>root</user-name>
+      <introspection-schemas>*:WebTopic</introspection-schemas>
+    </data-source>
   </component>
 </project>
