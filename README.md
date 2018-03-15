@@ -8,10 +8,13 @@
 
 ## 開發環境
 - IDE：Intellij IDEA 2017.3.5 (Ultimate Version)
-
 - Broswer：Google Chrome 64.0.3282.186 (64 bit)
 - MySQL：5.7.21
 - MySQL Manager：Sequel Pro 1.1.2
+
+## 目錄結構
+
+![](https://github.com/jack24254029/WebTopic/blob/master/image/12.png)
 
 ## 類別庫版本
 
