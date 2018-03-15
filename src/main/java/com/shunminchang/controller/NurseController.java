@@ -43,15 +43,6 @@ public class NurseController {
         return "nurse/addNurse";
     }
 
-    @RequestMapping(value = "/nurse/addNurseP", method = RequestMethod.POST)
-    public String addNurseP(@ModelAttribute("nurse") NurseEntity nurseEntity) {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        nurseEntity.setCreateTime(timestamp);
-        nurseEntity.setUpdateTime(timestamp);
-        nurseRepository.saveAndFlush(nurseEntity);
-        return "redirect:/nurse/nurseList";
-    }
-
     @PostMapping(value = "/nurse/addSiteOfNurse")
     public @ResponseBody
     ResponseEntity<String> addSiteOfNurse(@RequestBody String json) {
@@ -59,6 +50,7 @@ public class NurseController {
         JSONObject jsonObject = new JSONObject(json);
         String nurseId = jsonObject.getString("nurseId");
         String nurseName = jsonObject.getString("nurseName");
+        // 新增護士
         NurseEntity nurseEntity = new NurseEntity();
         nurseEntity.setId(nurseId);
         nurseEntity.setName(nurseName);
@@ -66,6 +58,7 @@ public class NurseController {
         nurseEntity.setUpdateTime(createTime);
         nurseRepository.saveAndFlush(nurseEntity);
         JSONArray selectedArray = jsonObject.getJSONArray("selectedSiteIds");
+        // 新增護士分配之站點
         for (int i = 0; i < selectedArray.length(); i++) {
             int siteId = selectedArray.getInt(i);
             TaskEntity taskEntity = new TaskEntity();
@@ -110,6 +103,7 @@ public class NurseController {
 
     @RequestMapping(value = "/nurse/updateNurseP", method = RequestMethod.POST)
     public String updateUserPost(@ModelAttribute("nurse") NurseEntity nurseEntity) {
+        // 更新護士資料
         nurseRepository.updateUser(nurseEntity.getName(), new Timestamp(System.currentTimeMillis()), nurseEntity.getId());
         nurseRepository.flush();
         return "redirect:/nurse/nurseList";
@@ -118,6 +112,7 @@ public class NurseController {
     @PostMapping(value = "/nurse/updateSiteOfNurse")
     public @ResponseBody
     ResponseEntity<String> updateSiteOfNurse(@RequestBody String json) {
+        // 更新護士分配之站點
         Timestamp createTime = new Timestamp(System.currentTimeMillis());
         JSONObject jsonObject = new JSONObject(json);
         String nurseId = jsonObject.getString("nurseId");
@@ -151,6 +146,7 @@ public class NurseController {
 
     @RequestMapping(value = "/nurse/delete/{id}", method = RequestMethod.GET)
     public String deleteNurse(@PathVariable("id") String id) {
+        // 刪除護士資料
         NurseEntity nurseEntity = nurseRepository.getOne(id);
         nurseRepository.delete(nurseEntity);
         return "redirect:/nurse/nurseList";

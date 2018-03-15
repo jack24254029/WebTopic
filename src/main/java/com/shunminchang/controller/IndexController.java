@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class IndexController {
+
+    // 首頁
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() {
         return "index";

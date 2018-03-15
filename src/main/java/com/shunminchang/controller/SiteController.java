@@ -29,6 +29,7 @@ public class SiteController {
 
     @RequestMapping(value = "/site/siteList", method = RequestMethod.GET)
     public String getSite(ModelMap modelMap) {
+        // 取得站點資料
         List<SiteEntity> siteEntities = siteRepository.findAll();
         modelMap.addAttribute("siteList", siteEntities);
         return "site/siteList";
@@ -41,6 +42,7 @@ public class SiteController {
 
     @RequestMapping(value = "/site/addSiteP", method = RequestMethod.POST)
     public String addSiteP(@ModelAttribute("site") SiteEntity siteEntity) {
+        // 新增站點資料
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         siteEntity.setCreateTime(timestamp);
         siteEntity.setUpdateTime(timestamp);
@@ -50,11 +52,13 @@ public class SiteController {
 
     @RequestMapping(value = "/site/show/{id}", method = RequestMethod.GET)
     public String showSite(@PathVariable("id") Integer id, ModelMap modelMap) {
+        // 取得站點資料
         SiteEntity siteEntity = siteRepository.findById(id).get();
         modelMap.addAttribute("site", siteEntity);
         List<TaskEntity> taskEntities = taskRepository.findAllBySiteId(id);
         modelMap.addAttribute("taskList", taskEntities);
         List<NurseEntity> nurseEntities = new ArrayList<>();
+        // 取得該站點有哪些護士加入
         for (TaskEntity taskEntity : taskEntities) {
             NurseEntity nurseEntity = nurseRepository.findById(taskEntity.getNurseId()).get();
             nurseEntities.add(nurseEntity);
@@ -65,6 +69,7 @@ public class SiteController {
 
     @RequestMapping(value = "/site/updateSiteP", method = RequestMethod.POST)
     public String updateUserPost(@ModelAttribute("site") SiteEntity siteEntity) {
+        // 更新站點資料
         siteRepository.updateSite(siteEntity.getName(),
                 new Timestamp(System.currentTimeMillis()), siteEntity.getId());
         siteRepository.flush();
@@ -73,6 +78,7 @@ public class SiteController {
 
     @RequestMapping(value = "/site/delete/{id}", method = RequestMethod.GET)
     public String deleteSite(@PathVariable("id") Integer id) {
+        // 刪除站點資料
         SiteEntity siteEntity = siteRepository.getOne(id);
         siteRepository.delete(siteEntity);
         return "redirect:/site/siteList";
