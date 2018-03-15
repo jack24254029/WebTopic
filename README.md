@@ -1,13 +1,20 @@
 # WebTopic
 
-## 專案簡述
+## 專案功能
+- 新增、刪除、修改護士資料
+- 新增、刪除、修改站點資料
+- 分配護士至站點之功能
+- 查看站點已加入護士之功能
 
 ## 開發環境
+IDE：Intellij IDEA 2017.3.5 (Ultimate Version)
+Broswer：Google Chrome 64.0.3282.186 (64 bit)
+MySQL：5.7.21
+MySQL Manager：Sequel Pro 1.1.2
 
 ## 類別庫版本
 
 ## 螢幕截圖
-
 ### 功能選單
 ![](https://github.com/jack24254029/WebTopic/blob/master/image/1.png)
 
