@@ -37,7 +37,9 @@ public class NurseController {
     }
 
     @RequestMapping(value = "/nurse/addNurse", method = RequestMethod.GET)
-    public String addNurse() {
+    public String addNurse(ModelMap modelMap) {
+        List<SiteEntity> siteEntities = siteRepository.findAll();
+        modelMap.addAttribute("unSelectedSiteList", siteEntities);
         return "nurse/addNurse";
     }
 
@@ -48,6 +50,31 @@ public class NurseController {
         nurseEntity.setUpdateTime(timestamp);
         nurseRepository.saveAndFlush(nurseEntity);
         return "redirect:/nurse/nurseList";
+    }
+
+    @PostMapping(value = "/nurse/addSiteOfNurse")
+    public @ResponseBody
+    ResponseEntity<String> addSiteOfNurse(@RequestBody String json) {
+        Timestamp createTime = new Timestamp(System.currentTimeMillis());
+        JSONObject jsonObject = new JSONObject(json);
+        String nurseId = jsonObject.getString("nurseId");
+        String nurseName = jsonObject.getString("nurseName");
+        NurseEntity nurseEntity = new NurseEntity();
+        nurseEntity.setId(nurseId);
+        nurseEntity.setName(nurseName);
+        nurseEntity.setCreateTime(createTime);
+        nurseEntity.setUpdateTime(createTime);
+        nurseRepository.saveAndFlush(nurseEntity);
+        JSONArray selectedArray = jsonObject.getJSONArray("selectedSiteIds");
+        for (int i = 0; i < selectedArray.length(); i++) {
+            int siteId = selectedArray.getInt(i);
+            TaskEntity taskEntity = new TaskEntity();
+            taskEntity.setNurseId(nurseId);
+            taskEntity.setSiteId(siteId);
+            taskEntity.setCreateTime(createTime);
+            taskRepository.saveAndFlush(taskEntity);
+        }
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
     @RequestMapping(value = "/nurse/show/{id}", method = RequestMethod.GET)

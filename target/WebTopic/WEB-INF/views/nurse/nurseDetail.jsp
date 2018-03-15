@@ -69,7 +69,7 @@
         <hr>
         <form:form id="nurseForm" action="/nurse/updateNurseP" method="post" modelAttribute="nurse" role="form">
             <div class="form-group">
-                <a href="../.." role="button" class="btn btn-sm btn-light col-sm-1">返回</a>
+                <a href="../nurseList" role="button" class="btn btn-sm btn-light col-sm-1">返回</a>
                 <button type="button" class="btn btn-sm btn-success  col-sm-1" onclick="submitForms()">儲存</button>
             </div>
             <div class="form-group">
@@ -87,19 +87,21 @@
         <div class="form-group">
             <label>分配站點</label>
         </div>
-        <div class="form-group">
+        <div>
             <select id="unSelected" class="custom-select  col-sm-2" multiple>
                 <c:forEach items="${unSelectedSiteList}" var="site">
                     <option value="${site.id}">${site.name}</option>
                 </c:forEach>
             </select>
+            <div class="btn-group-vertical">
+                <button type="button" class="btn btn-primary" id="add" onclick="addItem()">加入-></button>
+                <button type="button" class="btn btn-danger" id="remove" onclick="removeItem()"><-刪除</button>
+            </div>
             <select id="selected" class="custom-select col-sm-2" multiple>
                 <c:forEach items="${selectedSiteList}" var="site">
                     <option value="${site.id}">${site.name}</option>
                 </c:forEach>
             </select>
-            <button type="button" class="btn" id="add" onclick="addItem()">add</button>
-            <button type="button" class="btn" id="remove" onclick="removeItem()">remove</button>
         </div>
     </body>
 </html>

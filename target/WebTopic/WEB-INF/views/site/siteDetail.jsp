@@ -33,7 +33,7 @@
         <hr>
         <form:form action="/site/updateSiteP" method="post" modelAttribute="site" role="form">
             <div class="form-group">
-                <a href="../.." role="button" class="btn btn-sm btn-light col-sm-1">返回</a>
+                <a href="../siteList" role="button" class="btn btn-sm btn-light col-sm-1">返回</a>
                 <button type="submit" class="btn btn-sm btn-success  col-sm-1">儲存</button>
             </div>
             <div class="form-group">
